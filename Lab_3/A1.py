@@ -3,13 +3,24 @@ y1 = int (input())
 x2 = int (input())
 y2 = int (input())
 if (x1>0 and y1>0):
- n=1
+ n="I"
 elif (x1<0 and y1>0):
- n=2
+ n="II"
 elif (x1<0 and y1<0):
- n=3
+ n="III"
 elif (x1>0 and y1<0):
- n=4
+ n="IV"
 else:
  n=0
+if (x2>0 and y2>0):
+ m="I"
+elif (x2<0 and y2>0):
+ m="II"
+elif (x2<0 and y2<0):
+ m="III"
+elif (x2>0 and y2<0):
+ m="IV"
+else:
+ m=0
+
  
