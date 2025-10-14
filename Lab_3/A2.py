@@ -1,0 +1,2 @@
+import string
+p=input()
