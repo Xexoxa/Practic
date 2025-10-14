@@ -7,8 +7,11 @@ if p.lower()==p: print("В пароле отсутствуют заглавны�
 else: n+=1
 if p.upper()==p: print("В пароле отсутствуют строчные буквы")
 else: n+=1
-if (any(symbol.isdigit() for symbol in p))=="False": print("В пароле отсутствуют цифры")
+if (any(symbol.isdigit() for symbol in p))==False: print("В пароле отсутствуют цифры")
+else: n+=1
+if any(symbol in '*-#' for symbol in p)==False: print("В пароле отсутствуют специальные символы")
 else: n+=1
 allowed = string.ascii_uppercase + string.ascii_lowercase + string.digits + '*-#'
-if all(symbol in allowed for symbol in p)=="False": print("В пароле отсутствуют специальные символы")
+if all(symbol in allowed for symbol in p)==False: print("В пароле используются непредусмотренные символы")
 else: n+=1
+if n==6: print("Надежный пароль")
