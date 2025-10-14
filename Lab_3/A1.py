@@ -22,5 +22,10 @@ elif (x2>0 and y2<0):
  m="IV"
 else:
  m=0
-
+if (n==0 or m==0):
+ print("Ошибка")
+elif (n==m):
+ print("YES, ", n)
+else:
+ print("NO")
  
