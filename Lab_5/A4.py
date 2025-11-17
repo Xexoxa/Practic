@@ -1,14 +1,16 @@
 import re
 import string
-def file_open(file, row):
+def file_open(file):
     xfile = open(file, 'r')
-    i=0
-    for s in xfile:
-        n=re.split('[\t\n]', s)
-        if i==row:
-            break
-        i+=1
-    return n
+    proteins = {}
+    for line in xfile:
+            parts = line.strip().split('\t')
+            if len(parts) >= 3:
+                name = parts[0]
+                organism = parts[1]
+                sequence = parts[2]
+                proteins[name] = (organism, sequence)
+    return proteins
 def encode(st):
     n='none'
     i=0
