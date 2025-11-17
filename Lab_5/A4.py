@@ -61,6 +61,18 @@ def process_commands(seq_file, cmd_file, out_file):
                 diff_count = sum(1 for i in range(min_len) if seq1[i] != seq2[i])
                 diff_count += abs(len(seq1) - len(seq2))
                 results.append((idx, 'diff', (prot1, prot2), diff_count))
+        elif op_name == 'mode':
+            prot_name = op_parts[1]
+            if prot_name not in proteins:
+                results.append((idx, 'mode', prot_name, 'MISSING: ' + prot_name))
+            else:
+                seq = proteins[prot_name][1]
+                freq = {}
+                for aa in seq:
+                    freq[aa] = freq.get(aa, 0) + 1
+                max_count = max(freq.values())
+                most_common = min([aa for aa, cnt in freq.items() if cnt == max_count])
+                results.append((idx, 'mode', prot_name, (most_common, max_count)))
         
 
 
