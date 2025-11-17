@@ -25,7 +25,27 @@ def encode(st):
         n=char
         i+=1
     return st
-print(file_open('sequences.0.txt', 2))
-print(file_open('commands.0.txt', 2))
+def process_commands(seq_file, cmd_file, out_file):
+    proteins = file_open(seq_file)
+    results = []
+    xfile = open(cmd_file, 'r')
+    commands = xfile.readlines()
+    for idx, cmd in enumerate(commands, 1):
+        cmd = cmd.strip()
+        if not cmd:
+            continue
+        
+        op_parts = cmd.split('\t')
+        op_name = op_parts[0]
+        
+        if op_name == 'search':
+            pattern = op_parts[1]
+            found = []
+            for name, (org, seq) in proteins.items():
+                if pattern in seq:
+                    found.append((org, name))
+            results.append((idx, 'search', pattern, found))
+        
+
 
 
