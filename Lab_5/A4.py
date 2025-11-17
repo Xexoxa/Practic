@@ -73,7 +73,28 @@ def process_commands(seq_file, cmd_file, out_file):
                 max_count = max(freq.values())
                 most_common = min([aa for aa, cnt in freq.items() if cnt == max_count])
                 results.append((idx, 'mode', prot_name, (most_common, max_count)))
-        
-
+        f=open(out_file, 'w')
+        f.write("Ignatchik Mark\n")
+        f.write("Genetic Searching\n")
+        for idx, op, param, res in results:
+            f.write("--------------------------------------------------------------------------\n")
+            f.write(f"{idx:03d} {op} {param if isinstance(param, str) else ' '.join(param)}\n")
+            if op == 'search':
+                f.write(f"{'organism':<30} {'protein'}\n")
+                if res:
+                    for org, name in res:
+                        f.write(f"{org}\t{name}\n")
+                else:
+                    f.write("NOT FOUND\n")
+            elif op == 'diff':
+                f.write("amino-acids difference:\n")
+                f.write(f"{res}\n")
+            elif op == 'mode':
+                f.write("amino-acid occurs:\n")
+                if isinstance(res, tuple):
+                    f.write(f"{res[0]}\t{res[1]}\n")
+                else:
+                    f.write(f"{res}\n")
+process_commands("sequences.0.txt", "commands.0.txt", "genedata.0.txt")                    
 
 
