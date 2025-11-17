@@ -37,7 +37,7 @@ def process_commands(seq_file, cmd_file, out_file):
         
         op_parts = cmd.split('\t')
         op_name = op_parts[0]
-        
+
         if op_name == 'search':
             pattern = op_parts[1]
             found = []
@@ -45,6 +45,22 @@ def process_commands(seq_file, cmd_file, out_file):
                 if pattern in seq:
                     found.append((org, name))
             results.append((idx, 'search', pattern, found))
+        elif op_name == 'diff':
+            prot1, prot2 = op_parts[1], op_parts[2]
+            if prot1 not in proteins or prot2 not in proteins:
+                missing = []
+                if prot1 not in proteins:
+                    missing.append(prot1)
+                if prot2 not in proteins:
+                    missing.append(prot2)
+                results.append((idx, 'diff', (prot1, prot2), 'MISSING: ' + ', '.join(missing)))
+            else:
+                seq1 = proteins[prot1][1]
+                seq2 = proteins[prot2][1]
+                min_len = min(len(seq1), len(seq2))
+                diff_count = sum(1 for i in range(min_len) if seq1[i] != seq2[i])
+                diff_count += abs(len(seq1) - len(seq2))
+                results.append((idx, 'diff', (prot1, prot2), diff_count))
         
 
 
