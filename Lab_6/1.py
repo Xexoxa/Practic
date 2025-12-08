@@ -38,6 +38,14 @@ def load_workouts_data():
     except FileNotFoundError:
         print("Файл не найден")
         return []
+users = load_users_data()
+workouts = load_workouts_data()
+users_dict = {u['user_id']: u for u in users}
+for w in workouts:
+    u_id = w['user_id']
+    if u_id in users_dict:
+        users_dict[u_id]['workouts'].append(w)
+
 def get_stats(users, workouts):
     total_workouts = len(workouts)
     total_users = len(users)
@@ -51,6 +59,7 @@ def get_stats(users, workouts):
     print(f"Сожжено калорий: {total_calories}")
     print(f"Общее время: {total_hours:.1f} часов")
     print(f"Пройдено дистанции: {total_distance:.1f} км")
+
 def analyze_user_activity(users):
     user_stats = []
     for user in users:
@@ -65,12 +74,14 @@ def analyze_user_activity(users):
             'calories': calories,
             'hours': hours
         })
-        sorted_users = sorted(user_stats, key=lambda x: x['calories'], reverse=True)[:3]
-        print("\nТОП-3 АКТИВНЫХ ПОЛЬЗОВАТЕЛЕЙ:")
+    sorted_users = sorted(user_stats, key=lambda x: x['calories'], reverse=True)[:3]
+    print("\nТОП-3 АКТИВНЫХ ПОЛЬЗОВАТЕЛЕЙ:")
     for i, u in enumerate(sorted_users, 1):
         print(f"{i}. {u['name']} ({u['level']}):")
         print(f"   Тренировок: {u['count']}")
         print(f"   Калорий: {u['calories']}")
         print(f"   Время: {u['hours']:.1f} часов")
 
-print(analyze_user_activity(load_users_data()))
+print(analyze_user_activity(users))
+
+
