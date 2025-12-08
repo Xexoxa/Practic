@@ -51,4 +51,26 @@ def get_stats(users, workouts):
     print(f"Сожжено калорий: {total_calories}")
     print(f"Общее время: {total_hours:.1f} часов")
     print(f"Пройдено дистанции: {total_distance:.1f} км")
-print (get_stats(load_users_data(), load_workouts_data()))
+def analyze_user_activity(users):
+    user_stats = []
+    for user in users:
+        u_workouts = user['workouts']
+        count = len(u_workouts)
+        calories = sum(w['calories'] for w in u_workouts)
+        hours = sum(w['duration'] for w in u_workouts) / 60
+        user_stats.append({
+            'name': user['name'],
+            'level': user['fitness_level'],
+            'count': count,
+            'calories': calories,
+            'hours': hours
+        })
+        sorted_users = sorted(user_stats, key=lambda x: x['calories'], reverse=True)[:3]
+        print("\nТОП-3 АКТИВНЫХ ПОЛЬЗОВАТЕЛЕЙ:")
+    for i, u in enumerate(sorted_users, 1):
+        print(f"{i}. {u['name']} ({u['level']}):")
+        print(f"   Тренировок: {u['count']}")
+        print(f"   Калорий: {u['calories']}")
+        print(f"   Время: {u['hours']:.1f} часов")
+
+print(analyze_user_activity(load_users_data()))
