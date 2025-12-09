@@ -138,6 +138,92 @@ target_name = "Анна"
 user_obj = next((u for u in users if u['name'] == target_name), None)
 if user_obj:
     analyze_user(user_obj, user_obj['workouts'])
+def visualize_data(users, workouts):
+
+    type_counts = {}
+    for w in workouts:
+        type_counts[w['type']] = type_counts.get(w['type'], 0) + 1
+    
+    plt.figure(figsize=(10, 6))
+    plt.pie(type_counts.values(), labels=type_counts.keys(), autopct='%1.1f%%')
+    plt.title("Распределение типов тренировок")
+    plt.show()
+
+    user_names = [u['name'] for u in users]
+    user_counts = [len(u['workouts']) for u in users]
+    sorted_users = sorted(range(len(user_counts)), key=lambda k: user_counts[k], reverse=True)
+    sorted_counts = [user_counts[i] for i in sorted_users]
+
+    plt.figure(figsize=(10, 6))
+    bars=plt.bar(user_names, sorted_counts, color='lightblue')
+    plt.title("Активность пользователей (количество тренировок)")
+    plt.ylabel("Количество")
+    plt.xlabel("Пользователи")
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                 f'{height}', ha='center', va='bottom')
+    
+    plt.show()
+
+    work_types = []
+    for w in workouts:
+        if w['type'] not in work_types:
+            work_types.append(w['type'])
+
+    cal_types = {}
+    for w in workouts:
+        cal_types[w['type']] = cal_types.get(w['type'], 0) + w['calories']
+    cal = list(cal_types.values())
+    time_types = {}
+    for w in workouts:
+        time_types[w['type']] = time_types.get(w['type'], 0) + w['duration']
+    time = list(time_types.values())
+    eff = []
+    for i in range(len(cal)):
+        eff.append(round(cal[i]/time[i], 2))
+    sorted_et = sorted(range(len(eff)), key=lambda k: eff[k], reverse=True)
+    sorted_types = [work_types[i] for i in sorted_et]
+    sorted_eff = [eff[i] for i in sorted_et]
 
 
+    plt.figure(figsize=(10, 6))
+    bars=plt.bar(sorted_types, sorted_eff, color='violet')
+    plt.title("Эффективность тренировок (калории/минуту)")
+    plt.ylabel("Калории в минуту")
+    plt.xlabel("Тип тренировки")
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                 f'{height}', ha='center', va='bottom')
+    
+    plt.show()
 
+    user_cals = []
+    colors = []
+    for u in users:
+        total = sum(w['calories'] for w in u['workouts'])
+        user_cals.append(total)
+        if u['fitness_level'] == 'продвинутый': colors.append('salmon')
+        elif u['fitness_level'] == 'средний' : colors.append('orange')
+        elif u['fitness_level'] == 'начальный' : colors.append('limegreen')
+    
+    sorted_indices = sorted(range(len(user_cals)), key=lambda k: user_cals[k], reverse=True)
+    sorted_names = [user_names[i] for i in sorted_indices]
+    sorted_cals = [user_cals[i] for i in sorted_indices]
+    sorted_colors = [colors[i] for i in sorted_indices]
+
+    workout_type = []
+
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(sorted_names, sorted_cals, color=sorted_colors)
+    plt.title("Сравнение пользователей по общим затраченным калориям")
+    plt.ylabel("Общие калории")
+    
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                 f'{height}', ha='center', va='bottom')
+    
+    plt.show()
+visualize_data(users, workouts)
