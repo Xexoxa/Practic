@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import matplotlib.pyplot as plt
 def load_users_data():
     try:
         users_tree = ET.parse('users.xml')
@@ -103,7 +104,40 @@ def analyze_workout_types(workouts):
         print(f"{w_type.capitalize()}: {stats['count']} тренировок ({percent:.1f}%)")
         print(f"   Средняя длительность: {avg_dur:.0f} мин")
         print(f"   Средние калории: {avg_cal:.0f} ккал")
+def find_user_workouts(users, user_name):
+    target_user = next((u for u in users if u['name'].lower() == user_name.lower()), None)
+    if target_user:
+        return target_user['workouts']
+    return []
+def analyze_user(user, user_workouts):
+    if not user:
+        print("\nПользователь не найден.")
+        return
 
-print(analyze_workout_types(workouts))
+    count = len(user_workouts)
+    calories = sum(w['calories'] for w in user_workouts)
+    hours = sum(w['duration'] for w in user_workouts) / 60
+    distance = sum(w['distance'] for w in user_workouts)
+    avg_cal = calories / count if count > 0 else 0
+    
+    type_counts = {}
+    for w in user_workouts:
+        type_counts[w['type']] = type_counts.get(w['type'], 0) + 1
+    fav_type = max(type_counts, key=type_counts.get) if type_counts else "нет"
+
+    print(f"\nДЕТАЛЬНЫЙ АНАЛИЗ ДЛЯ ПОЛЬЗОВАТЕЛЯ: {user['name']}")
+    print(f"Возраст: {user['age']} лет, Вес: {user['weight']} кг")
+    print(f"Уровень: {user['fitness_level']}")
+    print(f"Тренировок: {count}")
+    print(f"Сожжено калорий: {calories}")
+    print(f"Общее время: {hours:.1f} часов")
+    print(f"Пройдено дистанции: {distance:.1f} км")
+    print(f"Средние калории за тренировку: {avg_cal:.0f}")
+    print(f"Любимый тип тренировки: {fav_type}")
+target_name = "Анна"
+user_obj = next((u for u in users if u['name'] == target_name), None)
+if user_obj:
+    analyze_user(user_obj, user_obj['workouts'])
+
 
 
