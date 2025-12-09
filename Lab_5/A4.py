@@ -7,9 +7,9 @@ def file_open(file):
             parts = line.strip().split('\t')
             if len(parts) >= 3:
                 name = parts[0]
-                organism = parts[1]
-                sequence = parts[2]
-                proteins[name] = (organism, sequence)
+                org = parts[1]
+                seq = parts[2]
+                proteins[name] = (org, seq)
     return proteins
 def encode(st):
     n='none'
@@ -95,6 +95,6 @@ def process_commands(seq_file, cmd_file, out_file):
                     f.write(f"{res[0]}\t{res[1]}\n")
                 else:
                     f.write(f"{res}\n")
-process_commands("sequences.0.txt", "commands.0.txt", "genedata.0.txt")                    
+process_commands("sequences.1.txt", "commands.1.txt", "genedata.1.txt")                    
 
 
